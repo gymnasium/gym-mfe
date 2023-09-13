@@ -70,8 +70,8 @@ CORE_MFE_APPS: dict[str, MFE_ATTRS_TYPE] = {
         "port": 1993,
     },
     "profile": {
-        "repository": "https://github.com/openedx/frontend-app-profile",
-        "refs": "https://api.github.com/repos/openedx/frontend-app-profile/git/refs/" + gh_refs_path(),
+        "repository": "https://github.com/gymnasium/frontend-app-profile",
+        "refs": "https://api.github.com/repos/gymnasium/frontend-app-profile/git/refs/heads/gym/dev",
         "port": 1995,
     },
 }
