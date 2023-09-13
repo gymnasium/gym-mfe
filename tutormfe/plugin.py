@@ -71,7 +71,7 @@ CORE_MFE_APPS: dict[str, MFE_ATTRS_TYPE] = {
     },
     "profile": {
         "repository": "https://github.com/gymnasium/frontend-app-profile",
-        "refs": "https://api.github.com/repos/gymnasium/frontend-app-profile/git/refs/heads",
+        "refs": "https://api.github.com/repos/gymnasium/frontend-app-profile/git/refs/tags",
         "version": "gym/dev",
         "port": 1995,
     },
