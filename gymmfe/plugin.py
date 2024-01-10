@@ -29,6 +29,8 @@ config = {
     },
 }
 
+version = "gym.palm.4"
+
 
 def get_github_refs_path(name: str) -> str:
     """
@@ -41,61 +43,82 @@ def get_github_refs_path(name: str) -> str:
 
     """
 
-    return f"https://api.github.com/repos/{name}/git/refs/{'heads' if __version_suffix__ else 'tags'}"
+    return f"https://api.github.com/repos/{name}/git/refs/heads"
 
 
 CORE_MFE_APPS: dict[str, MFE_ATTRS_TYPE] = {
     "authn": {
-        "repository": "https://github.com/openedx/frontend-app-authn",
-        "refs": get_github_refs_path("openedx/frontend-app-authn"),
+        "repository": "https://github.com/gymnasium/frontend-app-authn",
+        "refs": get_github_refs_path("gymnasium/frontend-app-authn"),
         "port": 1999,
+        "version": version,
     },
     "account": {
-        "repository": "https://github.com/openedx/frontend-app-account",
-        "refs": get_github_refs_path("openedx/frontend-app-account"),
+        "repository": "https://github.com/gymnasium/frontend-app-account",
+        "refs": get_github_refs_path("gymnasium/frontend-app-account"),
         "port": 1997,
+        "version": version,
     },
-    "communications": {
-        "repository": "https://github.com/openedx/frontend-app-communications",
-        "refs": get_github_refs_path("openedx/frontend-app-communications"),
-        "port": 1984,
+    # "communications": {
+    #     "repository": "https://github.com/gymnasium/frontend-app-communications",
+    #     "refs": get_github_refs_path("gymnasium/frontend-app-communications"),
+    #     "port": 1984,
+    #     "version": version,
+    # },
+    "course-about": {
+        "repository": "https://github.com/gymnasium/frontend-app-course-about",
+        "refs": get_github_refs_path("gymnasium/frontend-app-course-about"),
+        "port": 3000,
+        "version": version,
     },
     "course-authoring": {
-        "repository": "https://github.com/openedx/frontend-app-course-authoring",
-        "refs": get_github_refs_path("openedx/frontend-app-course-authoring"),
+        "repository": "https://github.com/gymnasium/frontend-app-course-authoring",
+        "refs": get_github_refs_path("gymnasium/frontend-app-course-authoring"),
         "port": 2001,
+        "version": version,
     },
     "discussions": {
-        "repository": "https://github.com/openedx/frontend-app-discussions",
-        "refs": get_github_refs_path("openedx/frontend-app-discussions"),
+        "repository": "https://github.com/gymnasium/frontend-app-discussions",
+        "refs": get_github_refs_path("gymnasium/frontend-app-discussions"),
         "port": 2002,
+        "version": version,
     },
-    "gradebook": {
-        "repository": "https://github.com/openedx/frontend-app-gradebook",
-        "refs": get_github_refs_path("openedx/frontend-app-gradebook"),
-        "port": 1994,
+    # "gradebook": {
+    #     "repository": "https://github.com/gymnasium/frontend-app-gradebook",
+    #     "refs": get_github_refs_path("gymnasium/frontend-app-gradebook"),
+    #     "port": 1994,
+    #     "version": version,
+    # },
+    "learner-dashboard": {
+        "repository": "https://github.com/gymnasium/frontend-app-learner-dashboard",
+        "refs": get_github_refs_path("gymnasium/frontend-app-learner-dashboard"),
+        "port": 1996,
+        "version": version,
     },
     "learning": {
-        "repository": "https://github.com/openedx/frontend-app-learning",
-        "refs": get_github_refs_path("openedx/frontend-app-learning"),
+        "repository": "https://github.com/gymnasium/frontend-app-learning",
+        "refs": get_github_refs_path("gymnasium/frontend-app-learning"),
         "port": 2000,
+        "version": version,
     },
-    "ora-grading": {
-        "repository": "https://github.com/openedx/frontend-app-ora-grading",
-        "refs": get_github_refs_path("openedx/frontend-app-ora-grading"),
-        "port": 1993,
-    },
+    # "ora-grading": {
+    #     "repository": "https://github.com/gymnasium/frontend-app-ora-grading",
+    #     "refs": get_github_refs_path("gymnasium/frontend-app-ora-grading"),
+    #     "port": 1993,
+    #     "version": version,
+    # },
     "profile": {
-        "repository": "https://github.com/openedx/frontend-app-profile",
-        "refs": get_github_refs_path("openedx/frontend-app-profile"),
+        "repository": "https://github.com/gymnasium/frontend-app-profile",
+        "refs": get_github_refs_path("gymnasium/frontend-app-profile"),
         "port": 1995,
+        "version": version,
     },
 }
 
 
 # The core MFEs are added with a high priority, such that other users can override or
 # remove them.
-@MFE_APPS.add(priority=tutor_hooks.priorities.HIGH)
+@MFE_APPS.add(priority=tutor_hooks.priorities.LOW)
 def _add_core_mfe_apps(apps: dict[str, MFE_ATTRS_TYPE]) -> dict[str, MFE_ATTRS_TYPE]:
     apps.update(CORE_MFE_APPS)
     return apps
@@ -180,7 +203,7 @@ def _mounted_mfe_image_management() -> None:
 # init script
 with open(
     os.path.join(
-        pkg_resources.resource_filename("tutormfe", "templates"),
+        pkg_resources.resource_filename("gymmfe", "templates"),
         "mfe",
         "tasks",
         "lms",
@@ -256,7 +279,7 @@ def _build_3rd_party_dev_mfes_on_launch(
 # Boilerplate code
 # Add the "templates" folder as a template root
 tutor_hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
-    pkg_resources.resource_filename("tutormfe", "templates")
+    pkg_resources.resource_filename("gymmfe", "templates")
 )
 # Render the "build" and "apps" folders
 tutor_hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
@@ -268,7 +291,7 @@ tutor_hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
 # Load patches from files
 for path in glob(
     os.path.join(
-        pkg_resources.resource_filename("tutormfe", "patches"),
+        pkg_resources.resource_filename("gymmfe", "patches"),
         "*",
     )
 ):

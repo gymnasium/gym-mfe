@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/node/tags
-FROM docker.io/node:18.16.0-bullseye-slim AS base
+FROM docker.io/node:18.17.0-bullseye-slim AS base
 
 RUN apt update \
   && apt install -y git \
@@ -62,8 +62,9 @@ ARG NPM_REGISTRY={{ NPM_REGISTRY }}
 {#- Required for building optipng on M1 #}
 ENV CPPFLAGS=-DPNG_ARM_NEON_OPT=0
 {#- We define this environment variable to bypass an issue with the installation of pact https://github.com/pact-foundation/pact-js-core/issues/264 #}
+ENV DOCKER_BUILDKIT=0
 ENV PACT_SKIP_BINARY_INSTALL=true
-RUN {% if is_buildkit_enabled() %}--mount=type=cache,target=/root/.npm,sharing=shared {% endif %}npm clean-install --no-audit --no-fund --registry=$NPM_REGISTRY
+RUN {% if is_buildkit_enabled() %}--mount=type=cache,target=/root/.npm,sharing=shared {% endif %}npm clean-install --no-audit --no-fund --stats-children --registry=$NPM_REGISTRY
 {{ patch("mfe-dockerfile-post-npm-install") }}
 {{ patch("mfe-dockerfile-post-npm-install-{}".format(app_name)) }}
 COPY --from={{ app_name }}-src / /openedx/app

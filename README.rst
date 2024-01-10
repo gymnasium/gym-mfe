@@ -5,24 +5,24 @@ This plugin makes it possible to easily add micro frontend (MFE) applications on
 
 In addition, this plugin comes with a few MFEs which are enabled by default:
 
-- `Authn <https://github.com/openedx/frontend-app-authn/>`__
-- `Account <https://github.com/openedx/frontend-app-account/>`__
-- `Communications <https://github.com/openedx/frontend-app-communications/>`__
-- `Course Authoring <https://github.com/openedx/frontend-app-course-authoring/>`__
-- `Discussions <https://github.com/openedx/frontend-app-discussions/>`__
-- `Gradebook <https://github.com/openedx/frontend-app-gradebook/>`__
-- `Learning <https://github.com/openedx/frontend-app-learning/>`__
-- `ORA Grading <https://github.com/openedx/frontend-app-ora-grading/>`__
-- `Profile <https://github.com/openedx/frontend-app-profile/>`__
+- `Authn <https://github.com/gymnasium/frontend-app-authn/>`__
+- `Account <https://github.com/gymnasium/frontend-app-account/>`__
+- `Communications <https://github.com/gymnasium/frontend-app-communications/>`__
+- `Course Authoring <https://github.com/gymnasium/frontend-app-course-authoring/>`__
+- `Discussions <https://github.com/gymnasium/frontend-app-discussions/>`__
+- `Gradebook <https://github.com/gymnasium/frontend-app-gradebook/>`__
+- `Learning <https://github.com/gymnasium/frontend-app-learning/>`__
+- `ORA Grading <https://github.com/gymnasium/frontend-app-ora-grading/>`__
+- `Profile <https://github.com/gymnasium/frontend-app-profile/>`__
 
 Instructions for using each of these MFEs are given below.
 
 Installation
 ------------
 
-::
+To install this plugin, clone it into your tutor plugins directory and type::
 
-    tutor plugins install mfe
+    pip install -e tutor-mfe
 
 Usage
 -----
@@ -210,7 +210,7 @@ To change the MFEs logos from the default to your own logos, override the corres
 
 If patches are the same in development and production, they can be replaced by a single `mfe-lms-common-settings` patch.
 
-To install custom components for the MFEs, such as the `header <https://github.com/openedx/frontend-component-header>`_ and `footer <https://github.com/openedx/frontend-component-footer>`_, override the components by adding a patch to ``mfe-dockerfile-post-npm-install`` in your plugin:
+To install custom components for the MFEs, such as the `header <https://github.com/gymnasium/frontend-component-header>`_ and `footer <https://github.com/gymnasium/frontend-component-footer>`_, override the components by adding a patch to ``mfe-dockerfile-post-npm-install`` in your plugin:
 ::
 
     from tutor import hooks
