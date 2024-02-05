@@ -1,29 +1,30 @@
 Micro Frontend base plugin for `Tutor <https://docs.tutor.edly.io>`__
 =========================================================================
 
+These MFEs are Gymnasium-specific.
+
 This plugin makes it possible to easily add micro frontend (MFE) applications on top of an Open edX platform that runs with Tutor. To learn more about MFEs, please check the `official Open edX documentation <https://edx.readthedocs.io/projects/edx-developer-docs/en/latest/developers_guide/micro_frontends_in_open_edx.html>`__.
 
 In addition, this plugin comes with a few MFEs which are enabled by default:
 
-- `Authn <https://github.com/openedx/frontend-app-authn/>`__
-- `Account <https://github.com/openedx/frontend-app-account/>`__
-- `Communications <https://github.com/openedx/frontend-app-communications/>`__
-- `Course Authoring <https://github.com/openedx/frontend-app-course-authoring/>`__
-- `Discussions <https://github.com/openedx/frontend-app-discussions/>`__
-- `Gradebook <https://github.com/openedx/frontend-app-gradebook/>`__
-- `Learner Dashboard <https://github.com/openedx/frontend-app-learner-dashboard/>`__
-- `Learning <https://github.com/openedx/frontend-app-learning/>`__
-- `ORA Grading <https://github.com/openedx/frontend-app-ora-grading/>`__
-- `Profile <https://github.com/openedx/frontend-app-profile/>`__
+- `Authn <https://github.com/gymnasium/frontend-app-authn/>`__
+- `Account <https://github.com/gymnasium/frontend-app-account/>`__
+- `Course About <https://github.com/gymnasium/frontend-app-course-about/>`__
+
+- `Course Authoring <https://github.com/gymnasium/frontend-app-course-authoring/>`__
+- `Discussions <https://github.com/gymnasium/frontend-app-discussions/>`__
+- `Learner Dashboard <https://github.com/gymnasium/frontend-app-learner-dashboard/>`__
+- `Learning <https://github.com/gymnasium/frontend-app-learning/>`__
+- `Profile <https://github.com/gymnasium/frontend-app-profile/>`__
 
 Instructions for using each of these MFEs are given below.
 
 Installation
 ------------
 
-::
+To install this plugin, clone it into your tutor plugins directory and type::
 
-    tutor plugins install mfe
+    pip install -e tutor-mfe
 
 Usage
 -----
@@ -53,15 +54,7 @@ Account
 .. image:: https://raw.githubusercontent.com/overhangio/tutor-mfe/master/screenshots/account.png
     :alt: Account MFE screenshot
 
-An MFE to manage account-specific information for every LMS user. Each user's account page is available at ``http(s)://{{ MFE_HOST }}/account``. For instance, when running locally: https://apps.local.edly.io/account.
-
-Communications
-~~~~~~~~~~~~~~
-
-.. image:: https://raw.githubusercontent.com/overhangio/tutor-mfe/master/screenshots/communications.png
-    :alt: Communications MFE screenshot
-
-The Communications micro-frontend exposes an interface for course teams to communicate with learners.  It achieves this by allowing instructors to send out emails in bulk, either by scheduling them or on demand.
+An MFE to manage account-specific information for every LMS user. Each user's account page is available at ``http(s)://{{ MFE_HOST }}/account``. For instance, when running locally: https://apps.local.overhang.io/account.
 
 Course Authoring
 ~~~~~~~~~~~~~~~~
@@ -79,22 +72,6 @@ Discussions
 
 The Discussions MFE updates the previous discussions UI with a new look and better features.
 
-Gradebook
-~~~~~~~~~
-
-.. image:: https://raw.githubusercontent.com/overhangio/tutor-mfe/master/screenshots/gradebook.png
-    :alt: Gradebook MFE screenshot
-
-This instructor-only MFE is for viewing individual and aggregated grade results for a course. To access this MFE, go to a course → Instructor tab → Student Admin → View gradebook. The URL should be: ``http(s)://{{ MFE_HOST }}/gradebook/{{ course ID }}``. When running locally, the gradebook of the demo course is available at: http://apps.local.edly.io/gradebook/course-v1:edX+DemoX+Demo_Course
-
-Learner Dashboard
-~~~~~~~~~~~~~~~~~
-
-.. image:: https://raw.githubusercontent.com/overhangio/tutor-mfe/master/screenshots/learner-dashboard.png
-    :alt: Learner Dashboard MFE screenshot
-
-The Learner Dashboard MFE provides a clean and functional interface to allow learners to view all of their open enrollments, as well as take relevant actions on those enrollments.
-
 Learning
 ~~~~~~~~
 
@@ -103,21 +80,13 @@ Learning
 
 The Learning MFE replaces the former courseware, which is the core part of the LMS where students follow courses.
 
-ORA Grading
-~~~~~~~~~~~
-
-.. image:: https://raw.githubusercontent.com/overhangio/tutor-mfe/master/screenshots/ora-grading.png
-    :alt: ORA Grading MFE screenshot
-
-When enabled, Open Response Assessments ("ORA") that have a staff grading step will link to this new MFE, either when clicking "Grade Available Responses" from the exercise itself, or via a link in the Instructor Dashboard.  It is meant to streamline the grading process with better previews of submitted content.
-
 Profile
 ~~~~~~~~~
 
 .. image:: https://raw.githubusercontent.com/overhangio/tutor-mfe/master/screenshots/profile.png
     :alt: Profile MFE screenshot
 
-Edit and display user-specific profile information. The profile page of every user is visible at ``http(s)://{{ MFE_HOST }}/profile/u/{{ username }}``. For instance, when running locally, the profile page of the "admin" user is: http://apps.local.edly.io/profile/u/admin.
+Edit and display user-specific profile information. The profile page of every user is visible at ``http(s)://{{ MFE_HOST }}/profile/u/{{ username }}``. For instance, when running locally, the profile page of the "admin" user is: http://apps.local.overhang.io/profile/u/admin.
 
 
 MFE management
@@ -138,10 +107,14 @@ Other MFE developers can take advantage of this plugin to deploy their own MFEs.
             "repository": "https://github.com/myorg/mymfe",
             "port": 2001,
             "version": "me/my-custom-branch", # optional, will default to the Open edX current tag.
+            "refs": https://api.github.com/repos/myorg/mymfe/git/refs/heads", # optional
         }
         return mfes
 
-The MFE assets will then be bundled in the "mfe" Docker image whenever it is rebuilt with ``tutor images build mfe``.
+The MFE assets will then be bundled in the "mfe" Docker image whenever it is rebuilt with ``tutor images build mfe``. Providing a ``refs`` URL will ensure the build cache for that MFE is invalidated whenever a change is detected upstream at the git version in question.  You can use the `GitHub references API`_ or the `GitLab branches API`_ for this.
+
+.. _GitHub references API: https://docs.github.com/en/rest/git/refs?apiVersion=2022-11-28#get-a-reference
+.. _GitLab branches API: https://docs.gitlab.com/ee/api/branches.html#get-single-repository-branch
 
 Assets will be served at ``http(s)://{{ MFE_HOST }}/mymfe``. Developers are free to add extra template patches to their plugins, as usual: for instance LMS setting patches to make sure that the LMS correctly connects to the MFEs.
 
@@ -215,7 +188,7 @@ To change the MFEs logos from the default to your own logos, override the corres
 
 If patches are the same in development and production, they can be replaced by a single `mfe-lms-common-settings` patch.
 
-To install custom components for the MFEs, such as the `header <https://github.com/openedx/frontend-component-header>`_ and `footer <https://github.com/openedx/frontend-component-footer>`_, override the components by adding a patch to ``mfe-dockerfile-post-npm-install`` in your plugin:
+To install custom components for the MFEs, such as the `header <https://github.com/gymnasium/frontend-component-header>`_ and `footer <https://github.com/gymnasium/frontend-component-footer>`_, override the components by adding a patch to ``mfe-dockerfile-post-npm-install`` in your plugin:
 ::
 
     from tutor import hooks
@@ -319,7 +292,7 @@ Tutor makes it possible to run any MFE in development mode. For instance, to run
 
     tutor dev start profile
 
-Then, access http://apps.local.edly.io:1995/profile/u/YOURUSERNAME
+Then, access http://apps.local.overhang.io:1995/profile/u/YOURUSERNAME
 
 You can also bind-mount your own fork of an MFE. For example::
 
