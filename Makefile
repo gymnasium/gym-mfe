@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 .PHONY: docs
-SRC_DIRS = ./tutormfe
+SRC_DIRS = ./gymmfe
 BLACK_OPTS = --exclude templates ${SRC_DIRS}
 
 # Warning: These checks are run on every PR.
