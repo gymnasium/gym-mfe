@@ -38,6 +38,10 @@ CORE_MFE_APPS: dict[str, MFE_ATTRS_TYPE] = {
         "repository": "https://github.com/gymnasium/frontend-app-account.git",
         "port": 1997,
     },
+    "course-about": {
+        "repository": "https://github.com/gymnasium/frontend-app-course-about.git",
+        "port": 3000,
+    },
     # "communications": {
     #     "repository": "https://github.com/gymnasium/frontend-app-communications.git",
     #     "port": 1984,
