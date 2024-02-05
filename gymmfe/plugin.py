@@ -31,43 +31,43 @@ config = {
 
 CORE_MFE_APPS: dict[str, MFE_ATTRS_TYPE] = {
     "authn": {
-        "repository": "https://github.com/openedx/frontend-app-authn.git",
+        "repository": "https://github.com/gymnasium/frontend-app-authn.git",
         "port": 1999,
     },
     "account": {
-        "repository": "https://github.com/openedx/frontend-app-account.git",
+        "repository": "https://github.com/gymnasium/frontend-app-account.git",
         "port": 1997,
     },
-    "communications": {
-        "repository": "https://github.com/openedx/frontend-app-communications.git",
-        "port": 1984,
-    },
+    # "communications": {
+    #     "repository": "https://github.com/gymnasium/frontend-app-communications.git",
+    #     "port": 1984,
+    # },
     "course-authoring": {
-        "repository": "https://github.com/openedx/frontend-app-course-authoring.git",
+        "repository": "https://github.com/gymnasium/frontend-app-course-authoring.git",
         "port": 2001,
     },
     "discussions": {
-        "repository": "https://github.com/openedx/frontend-app-discussions.git",
+        "repository": "https://github.com/gymnasium/frontend-app-discussions.git",
         "port": 2002,
     },
-    "gradebook": {
-        "repository": "https://github.com/openedx/frontend-app-gradebook.git",
-        "port": 1994,
-    },
+    # "gradebook": {
+    #     "repository": "https://github.com/gymnasium/frontend-app-gradebook.git",
+    #     "port": 1994,
+    # },
     "learner-dashboard": {
-        "repository": "https://github.com/openedx/frontend-app-learner-dashboard.git",
+        "repository": "https://github.com/gymnasium/frontend-app-learner-dashboard.git",
         "port": 1996,
     },
     "learning": {
-        "repository": "https://github.com/openedx/frontend-app-learning.git",
+        "repository": "https://github.com/gymnasium/frontend-app-learning.git",
         "port": 2000,
     },
-    "ora-grading": {
-        "repository": "https://github.com/openedx/frontend-app-ora-grading.git",
-        "port": 1993,
-    },
+    # "ora-grading": {
+    #     "repository": "https://github.com/gymnasium/frontend-app-ora-grading.git",
+    #     "port": 1993,
+    # },
     "profile": {
-        "repository": "https://github.com/openedx/frontend-app-profile.git",
+        "repository": "https://github.com/gymnasium/frontend-app-profile.git",
         "port": 1995,
     },
 }
@@ -168,7 +168,7 @@ def _mounted_mfe_image_management() -> None:
 # init script
 with open(
     os.path.join(
-        pkg_resources.resource_filename("tutormfe", "templates"),
+        pkg_resources.resource_filename("gymmfe", "templates"),
         "mfe",
         "tasks",
         "lms",
@@ -248,7 +248,7 @@ def _build_3rd_party_dev_mfes_on_launch(
 # Boilerplate code
 # Add the "templates" folder as a template root
 tutor_hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
-    pkg_resources.resource_filename("tutormfe", "templates")
+    pkg_resources.resource_filename("gymmfe", "templates")
 )
 # Render the "build" and "apps" folders
 tutor_hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
@@ -260,7 +260,7 @@ tutor_hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
 # Load patches from files
 for path in glob(
     os.path.join(
-        pkg_resources.resource_filename("tutormfe", "patches"),
+        pkg_resources.resource_filename("gymmfe", "patches"),
         "*",
     )
 ):
