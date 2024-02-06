@@ -22,64 +22,103 @@ if __version_suffix__:
 config = {
     "defaults": {
         "VERSION": __version__,
-        "DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}overhangio/openedx-mfe:{{ MFE_VERSION }}",
+        "DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}gymnasium/gym-theme-mfe:{{ MFE_VERSION }}",
         "HOST": "apps.{{ LMS_HOST }}",
         "COMMON_VERSION": "{{ OPENEDX_COMMON_VERSION }}",
         "CADDY_DOCKER_IMAGE": "{{ DOCKER_IMAGE_CADDY }}",
     },
 }
 
+version = "gym.quince.1"
+
+
+def get_github_refs_path(name: str) -> str:
+    """
+    Generate a URL to access refs in heads (nightly) or tags (stable) via Github API.
+    Args:
+        name (str): Consisted of the repository owner and the repository name, as a string in 'owner/repo' format.
+
+    Returns:
+        str: A string URL to the Github API, pointing to heads if version_suffix is set, tags otherwise.
+
+    """
+
+    return f"https://api.github.com/repos/{name}/git/refs/heads"
+
+
 CORE_MFE_APPS: dict[str, MFE_ATTRS_TYPE] = {
     "authn": {
         "repository": "https://github.com/gymnasium/frontend-app-authn.git",
+        "refs": get_github_refs_path("gymnasium/frontend-app-authn"),
         "port": 1999,
+        "version": version,
     },
     "account": {
         "repository": "https://github.com/gymnasium/frontend-app-account.git",
+        "refs": get_github_refs_path("gymnasium/frontend-app-account"),
         "port": 1997,
-    },
-    "course-about": {
-        "repository": "https://github.com/gymnasium/frontend-app-course-about.git",
-        "port": 3000,
+        "version": version,
     },
     # "communications": {
     #     "repository": "https://github.com/gymnasium/frontend-app-communications.git",
+    #     "refs": get_github_refs_path("gymnasium/frontend-app-communications"),
     #     "port": 1984,
+    #     "version": version,
     # },
-    "course-authoring": {
-        "repository": "https://github.com/gymnasium/frontend-app-course-authoring.git",
-        "port": 2001,
+    "course-about": {
+        "repository": "https://github.com/gymnasium/frontend-app-course-about.git",
+        "refs": get_github_refs_path("gymnasium/frontend-app-course-about"),
+        "port": 3000,
+        "version": version,
     },
+    # "course-authoring": {
+    #     "repository": "https://github.com/gymnasium/frontend-app-course-authoring.git",
+    #     "refs": get_github_refs_path("gymnasium/frontend-app-course-authoring"),
+    #     "port": 2001,
+    #     "version": version,
+    # },
     "discussions": {
         "repository": "https://github.com/gymnasium/frontend-app-discussions.git",
+        "refs": get_github_refs_path("gymnasium/frontend-app-discussions"),
         "port": 2002,
+        "version": version,
     },
     # "gradebook": {
     #     "repository": "https://github.com/gymnasium/frontend-app-gradebook.git",
+    #     "refs": get_github_refs_path("gymnasium/frontend-app-gradebook"),
     #     "port": 1994,
+    #     "version": version,
     # },
     "learner-dashboard": {
         "repository": "https://github.com/gymnasium/frontend-app-learner-dashboard.git",
+        "refs": get_github_refs_path("gymnasium/frontend-app-learner-dashboard"),
         "port": 1996,
+        "version": version,
     },
     "learning": {
         "repository": "https://github.com/gymnasium/frontend-app-learning.git",
+        "refs": get_github_refs_path("gymnasium/frontend-app-learning"),
         "port": 2000,
+        "version": version,
     },
     # "ora-grading": {
     #     "repository": "https://github.com/gymnasium/frontend-app-ora-grading.git",
+    #     "refs": get_github_refs_path("gymnasium/frontend-app-ora-grading"),
     #     "port": 1993,
+    #     "version": version,
     # },
     "profile": {
         "repository": "https://github.com/gymnasium/frontend-app-profile.git",
+        "refs": get_github_refs_path("gymnasium/frontend-app-profile"),
         "port": 1995,
+        "version": version,
     },
 }
 
 
 # The core MFEs are added with a high priority, such that other users can override or
 # remove them.
-@MFE_APPS.add(priority=tutor_hooks.priorities.HIGH)
+@MFE_APPS.add(priority=tutor_hooks.priorities.LOW)
 def _add_core_mfe_apps(apps: dict[str, MFE_ATTRS_TYPE]) -> dict[str, MFE_ATTRS_TYPE]:
     apps.update(CORE_MFE_APPS)
     return apps
@@ -91,14 +130,6 @@ def get_mfes() -> dict[str, MFE_ATTRS_TYPE]:
     This function is cached for performance.
     """
     return MFE_APPS.apply({})
-
-
-@tutor_hooks.Actions.PLUGIN_LOADED.add()
-def _clear_get_mfes_cache(_name: str) -> None:
-    """
-    Don't forget to clear cache, or we'll have some strange surprises...
-    """
-    get_mfes.cache_clear()
 
 
 def iter_mfes() -> t.Iterable[tuple[str, MFE_ATTRS_TYPE]]:
@@ -156,7 +187,7 @@ tutor_hooks.Filters.IMAGES_PUSH.add_item(
 def _mounted_mfe_image_management() -> None:
     for mfe_name, _mfe_attrs in iter_mfes():
         name = f"{mfe_name}-dev"
-        tag = "{{ DOCKER_REGISTRY }}overhangio/openedx-" + name + ":{{ MFE_VERSION }}"
+        tag = "{{ DOCKER_REGISTRY }}gymnasium/gym-theme-" + name + ":{{ MFE_VERSION }}"
         tutor_hooks.Filters.IMAGES_BUILD.add_item(
             (
                 name,
@@ -234,10 +265,6 @@ def _print_mfe_public_hosts(
 def _build_3rd_party_dev_mfes_on_launch(
     image_names: list[str], context_name: t.Literal["local", "dev"]
 ) -> list[str]:
-    if __version_suffix__:
-        # Build mfe image in nightly mode
-        image_names.append("mfe")
-
     for mfe_name, _mfe_attrs in iter_mfes():
         if __version_suffix__ or (
             context_name == "dev" and mfe_name not in CORE_MFE_APPS
