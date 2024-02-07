@@ -71,12 +71,12 @@ CORE_MFE_APPS: dict[str, MFE_ATTRS_TYPE] = {
         "port": 3000,
         "version": version,
     },
-    # "course-authoring": {
-    #     "repository": "https://github.com/gymnasium/frontend-app-course-authoring.git",
-    #     "refs": get_github_refs_path("gymnasium/frontend-app-course-authoring"),
-    #     "port": 2001,
-    #     "version": version,
-    # },
+    "course-authoring": {
+        "repository": "https://github.com/gymnasium/frontend-app-course-authoring.git",
+        "refs": get_github_refs_path("gymnasium/frontend-app-course-authoring"),
+        "port": 2001,
+        "version": version,
+    },
     "discussions": {
         "repository": "https://github.com/gymnasium/frontend-app-discussions.git",
         "refs": get_github_refs_path("gymnasium/frontend-app-discussions"),
