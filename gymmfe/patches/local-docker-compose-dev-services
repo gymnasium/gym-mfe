@@ -1,12 +1,12 @@
 mfe:
     ports:
-        {%- for app_name, app in iter_mfes() %}
+        {%- for app_name, app in gym_iter_mfes() %}
         {%- if not iter_mounts(MOUNTS, app_name)|list %}
         - {{ app["port"] }}:8002 # {{ app_name }}
         {%- endif %}
         {%- endfor %}
 
-{%- for app_name, app in iter_mfes() %}
+{%- for app_name, app in gym_iter_mfes() %}
 {%- set mounts = iter_mounts(MOUNTS, app_name)|list %}
 {%- if mounts %}
 {{ app_name }}: # Work on this MFE for development

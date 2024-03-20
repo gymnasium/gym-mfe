@@ -125,36 +125,36 @@ def _add_core_mfe_apps(apps: dict[str, MFE_ATTRS_TYPE]) -> dict[str, MFE_ATTRS_T
 
 
 @functools.lru_cache(maxsize=None)
-def get_mfes() -> dict[str, MFE_ATTRS_TYPE]:
+def gym_get_mfes() -> dict[str, MFE_ATTRS_TYPE]:
     """
     This function is cached for performance.
     """
     return MFE_APPS.apply({})
 
 
-def iter_mfes() -> t.Iterable[tuple[str, MFE_ATTRS_TYPE]]:
+def gym_iter_mfes() -> t.Iterable[tuple[str, MFE_ATTRS_TYPE]]:
     """
     Yield:
 
         (name, dict)
     """
-    yield from get_mfes().items()
+    yield from gym_get_mfes().items()
 
 
-def is_mfe_enabled(mfe_name: str) -> bool:
-    return mfe_name in get_mfes()
+def gym_is_mfe_enabled(mfe_name: str) -> bool:
+    return mfe_name in gym_get_mfes()
 
 
-def get_mfe(mfe_name: str) -> MFE_ATTRS_TYPE:
-    return get_mfes().get(mfe_name, {})
+def gym_get_mfe(mfe_name: str) -> MFE_ATTRS_TYPE:
+    return gym_get_mfes().get(mfe_name, {})
 
 
 # Make the mfe functions available within templates
 tutor_hooks.Filters.ENV_TEMPLATE_VARIABLES.add_items(
     [
-        ("get_mfe", get_mfe),
-        ("iter_mfes", iter_mfes),
-        ("is_mfe_enabled", is_mfe_enabled),
+        ("gym_get_mfe", gym_get_mfe),
+        ("gym_iter_mfes", gym_iter_mfes),
+        ("gym_is_mfe_enabled", gym_is_mfe_enabled),
     ]
 )
 
@@ -185,7 +185,7 @@ tutor_hooks.Filters.IMAGES_PUSH.add_item(
 # Build, pull and push {mfe}-dev images
 @tutor_hooks.Actions.PLUGINS_LOADED.add()
 def _mounted_mfe_image_management() -> None:
-    for mfe_name, _mfe_attrs in iter_mfes():
+    for mfe_name, _mfe_attrs in gym_iter_mfes():
         name = f"{mfe_name}-dev"
         tag = "{{ DOCKER_REGISTRY }}gymnasium/gym-theme-" + name + ":{{ MFE_VERSION }}"
         tutor_hooks.Filters.IMAGES_BUILD.add_item(
@@ -256,7 +256,7 @@ def _print_mfe_public_hosts(
     if context_name == "local":
         hostnames.append("{{ MFE_HOST }}")
     else:
-        for mfe_name, mfe_attrs in iter_mfes():
+        for mfe_name, mfe_attrs in gym_iter_mfes():
             hostnames.append("{{ MFE_HOST }}" + f":{mfe_attrs['port']}/{mfe_name}")
     return hostnames
 
@@ -265,7 +265,7 @@ def _print_mfe_public_hosts(
 def _build_3rd_party_dev_mfes_on_launch(
     image_names: list[str], context_name: t.Literal["local", "dev"]
 ) -> list[str]:
-    for mfe_name, _mfe_attrs in iter_mfes():
+    for mfe_name, _mfe_attrs in gym_iter_mfes():
         if __version_suffix__ or (
             context_name == "dev" and mfe_name not in CORE_MFE_APPS
         ):

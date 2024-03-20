@@ -25,12 +25,12 @@ FROM base AS i18n
 COPY ./i18n /openedx/i18n
 RUN chmod a+x /openedx/i18n/*.js
 RUN echo "copying i18n data" \
-  {%- for app_name, app in iter_mfes() %}
+  {%- for app_name, app in gym_iter_mfes() %}
   && mkdir -p /openedx/i18n/{{ app_name }} \
   {%- endfor %}
   echo "done."
 
-{% for app_name, app in iter_mfes() %}
+{% for app_name, app in gym_iter_mfes() %}
 ####################### {{ app_name }} MFE
 ######## {{ app_name }} (git)
 FROM base AS {{ app_name }}-git
@@ -93,7 +93,7 @@ CMD ["/bin/bash", "-c", "npm run start --- --config ./webpack.dev-tutor.config.j
 {% endfor %}
 
 # Production images are last to accelerate dev image building
-{%- for app_name, app in iter_mfes() %}
+{%- for app_name, app in gym_iter_mfes() %}
 ######## {{ app_name }} (production)
 FROM {{ app_name }}-common AS {{ app_name }}-prod
 ENV NODE_ENV=production
@@ -108,6 +108,6 @@ FROM {{ MFE_CADDY_DOCKER_IMAGE }} as production
 RUN mkdir -p /openedx/dist
 
 # Copy static assets
-{% for app_name, app in iter_mfes() %}
+{% for app_name, app in gym_iter_mfes() %}
 COPY --from={{ app_name }}-prod /openedx/app/dist /openedx/dist/{{ app_name }}
 {% endfor %}

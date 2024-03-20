@@ -20,7 +20,7 @@
         header_up Host {{ LMS_HOST }}
     }
 
-    {% for app_name, app in iter_mfes() %}
+    {% for app_name, app in gym_iter_mfes() %}
     @mfe_{{ app_name }} {
         path /{{ app_name }} /{{ app_name }}/*
     }

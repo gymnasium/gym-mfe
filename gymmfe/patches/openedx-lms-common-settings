@@ -5,12 +5,12 @@ ENABLE_MFE_CONFIG_API = True
 MFE_CONFIG_API_CACHE_TIMEOUT = 1
 
 # MFE-specific settings
-{% if get_mfe("authn") %}
+{% if gym_get_mfe("authn") %}
 FEATURES['ENABLE_AUTHN_MICROFRONTEND'] = True
 {% endif %}
-{% if get_mfe("communications") %}
+{% if gym_get_mfe("communications") %}
 FEATURES['ENABLE_NEW_BULK_EMAIL_EXPERIENCE'] = True
 {% endif %}
-{% if get_mfe("learner-dashboard") %}
+{% if gym_get_mfe("learner-dashboard") %}
 LEARNER_HOME_MFE_REDIRECT_PERCENTAGE = 100
 {% endif %}
